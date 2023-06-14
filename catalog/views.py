@@ -57,16 +57,22 @@ def complere_order(request):
     if request.method == "POST":
         result_message = 'Новый зака(из Сайта) \n\n'
     # Счетчик для подсчета итога корзины
-        total_for_all_cart = 0
+        total=0
+       # total_for_all_cart = 0
         for cart in user_cart:
             result_message += f'Название товара:{cart.user_product}\n' \
                         f'Колличество: {cart.user_product_quantity}'
-        handlers.bot.send_message(-738866598, result_message)
+            total += cart.user_product.price
+            result_message += f'\n\nИтог {total}'
+        handlers.bot.send_message(-951246925, result_message)
         user_cart.delete()
         return  redirect('/')
+
     return render(request, 'user_cart.html', {'user_cart': user_cart})
 
-def delete_from_user_cart(request):
-    user_cart = models.UserCart.objects.filter(user_id=request.user.id, user_product=pk)
-    user_cart.delete()
-    return redirect('/user_cart')
+def delete_from_user_cart(request, pk):
+    product_to_delete = models.Product.objects.get(id=pk)
+    models.UserCart.objects.filter(user_id=request.user.id, user_product=product_to_delete).delete()
+    # user_cart = models.UserCart.objects.filter(user_id=request.user.id, user_product=pk)
+    # user_cart.delete()
+    return redirect('/cart')

@@ -13,6 +13,7 @@ class Product(models.Model):
     price = models.FloatField()
     reviews = models.FloatField()
     category_name = models.ForeignKey(Category, on_delete=models.CASCADE)
+    product_image = models.ImageField(null=True, blank=True, upload_to='media')
 
     def __str__(self):
         return self.name
